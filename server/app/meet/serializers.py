@@ -6,7 +6,7 @@ class MeetSerializer(serializers.ModelSerializer):
     professionals_name = serializers.CharField(write_only=True)
     class Meta:
         model= Meet
-        fields = ('id','date','hour','professional_id','professionals_name','user_id','service_id', 'activa')
+        fields = ('id','date','hour','professional_id','professionals_name','user_id','user_name','service_id', 'cancelada')
         # para campos de solo lectura agregamos
         read_only_fields =('id', 'professionals_name')
         
