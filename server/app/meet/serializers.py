@@ -3,33 +3,17 @@ from .models import Meet
 from app.professionals.models import Professionals
 
 class MeetSerializer(serializers.ModelSerializer):
-    professionals_name = serializers.CharField(write_only=True)
+    
+
     class Meta:
-        model= Meet
-        fields = ('id','date','hour','professional_id','professionals_name','user_id','user_name','service_id', 'cancelada')
+        model = Meet
+        fields = ('id', 'date', 'start_time', 'end_time', 'cancelada', 'status',
+                  'professional_name', 'user_name', 'name_service')
         # para campos de solo lectura agregamos
-        read_only_fields =('id', 'professionals_name')
-        
-        def create(self, validated_data):
-            professionals_name = validated_data.pop('professionals_name')
-            professionals = Professionals.objects.get(name=professionals_name)
-            book = Meet.objects.create(professionals=professionals, **validated_data)
-            return book
-        
-        def update(self, instance, validated_data):
-            professionals_name = validated_data.pop('professionals_name', None)
-            if professionals_name:
-                professionals = Professionals.objects.get(name=professionals_name)
-                instance.professionals_id = professionals
-            instance.hour = validated_data.get('hour', instance.hour)
-            instance.save()
-            return instance
-        
-        
-    def to_representation(self, instance):
-        ret = super().to_representation(instance)
-        ret['professionals_name'] = instance.professional_id.name if instance.professional_id else None
-        return ret
+        read_only_fields = ('id','end_time','cancelada')
+
+   
+
         
         
         

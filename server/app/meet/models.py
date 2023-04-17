@@ -7,13 +7,20 @@ from app.services.models import Service
 
 # Create your models here.
 
+
 class Meet(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)    
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     date = models.DateField(null=True,)
-    hour= models.TimeField(null=True,)
-    cancelada = models.BooleanField(default=True,blank=True)
-    professional_id = models.ForeignKey(Professionals, on_delete=models.CASCADE, name='professional_id',null=True)   
-    professionals_name = models.CharField(max_length=250, blank=True,null=True) 
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE,name='user_id',null=True)
-    user_name = models.CharField(max_length=250, blank=True,null=True) 
-    service_id = models.ForeignKey(Service, on_delete=models.CASCADE,name='service_id',null=True)
+    start_time = models.TimeField(null=True,)
+    end_time = models.TimeField(null=True,)
+    cancelada = models.BooleanField(default=True, blank=True)
+    status = models.CharField(max_length=50, choices=[('scheduled', 'Scheduled'), (
+        'canceled', 'Canceled'), ('completed', 'Completed')], default='scheduled')    
+    professional_attendees = models.ForeignKey(
+        Professionals, on_delete=models.CASCADE, name='professional_name', null=True)    
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, name='user_name', null=True)    
+    name_service = models.CharField(max_length=250, default='')
+
+    def __str__(self):
+        return self.name_service

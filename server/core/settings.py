@@ -14,7 +14,7 @@ env = environ.Env(
 )
 
 environ.Env.read_env()
-print(env('DEBUG'))
+
 DEBUG = env('DEBUG')
 SECRET_KEY = env('SECRET_KEY')
 
@@ -95,15 +95,23 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': env('PGDATABASE'),
+#         'USER': env('PGUSER'),
+#         'PASSWORD': env('PGPASSWORD'),
+#         #'HOST': env('PGHOST'),
+#         'PORT': env('PGPORT'),
+#         'ATOMIC_REQUESTS': False,
+#     }
+# }
+
+#APPEND_SLASH=False
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env('PGDATABASE'),
-        'USER': env('PGUSER'),
-        'PASSWORD': env('PGPASSWORD'),
-        #'HOST': env('PGHOST'),
-        'PORT': env('PGPORT'),
-        'ATOMIC_REQUESTS': False,
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 

@@ -11,3 +11,6 @@ class User(models.Model):
     email = models.EmailField(unique=True, default='')
     tlf = models.CharField(max_length=250, unique=True, default='')
     password = models.CharField(max_length=250, default='')
+    
+    def __str__(self):
+        return  self.name

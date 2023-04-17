@@ -12,3 +12,6 @@ class Professionals(models.Model):
     specialty = models.CharField(max_length=150)
     tlf = models.CharField(max_length=200, unique=True, default='')
     admission_date = models.DateField(null=True, auto_now=True)
+    
+    def __str__(self):
+        return  self.name
