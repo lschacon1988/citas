@@ -1,10 +1,11 @@
 import uuid
 from django.db import models
 from app.professionals.models import Professionals
-from app.users.models import Client
+from app.customUser.models import CustomUser
+
 
 from app.services.models import Service
-from utils.manager.ProfessionalsManager import ProfessionalManager
+# from utils.manager.ProfessionalsManager import ProfessionalManager
 # from utils.validation.future_date_validator import validate_date
 from datetime import timezone
 from django.core.exceptions import ValidationError
@@ -30,9 +31,9 @@ class Meet(models.Model):
     professional_attendees = models.ForeignKey(
         Professionals, on_delete=models.CASCADE, name='professional_name', null=True)    
     user = models.ForeignKey(
-        Client, on_delete=models.CASCADE, name='user_name', null=True)    
-    
+        CustomUser, on_delete=models.CASCADE, name='user_name', null=True)    
+    name_service = models.CharField(max_length=50, default= 'Tradicional')
     objects = models.Manager()
-    professional_manager = ProfessionalManager()
+    # professional_manager = ProfessionalManager()
 
     

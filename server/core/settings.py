@@ -1,20 +1,17 @@
 
 
-
 from pathlib import Path
 from corsheaders.defaults import default_headers
 import os
 import environ
 
 
-
-
 env = environ.Env(
-    DEBUG=(bool,False)
+    DEBUG=(bool, False)
 )
 
 environ.Env.read_env()
-
+print(env('DEBUG'))
 DEBUG = env('DEBUG')
 SECRET_KEY = env('SECRET_KEY')
 
@@ -34,41 +31,27 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
-    #apps dependesis
+    'drf_yasg',
+    # apps dependesis
     'core',
-    'coreapi',
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
-    'dj_rest_auth',
-    'django.contrib.sites',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'dj_rest_auth.registration',
-    
-    #apps project
+    # apps project
     'app.meet',
     'app.professionals',
-    'app.users',
+    'app.customUser',
     'app.services',
-    
-    
-    
-    
-]
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-SITE_ID = 1
-ACCOUNT_EMAIL_REQUIRED = False
-ACCOUNT_AUTHENTICATION_METHOD = 'username'
-ACCOUNT_EMAIL_VERIFICATION = 'optional'
+
+
+
+]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    #cors middleware
+    # cors middleware
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -77,15 +60,15 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CORS_ORIGIN_WHITELIST=(
+CORS_ORIGIN_WHITELIST = (
     'http://localhost:3000',
     'http://127.0.0.1:3000',
-    'http://127.0.0.1:8000'
+    'http://localhost:3000',
+    'http://127.0.0.1:3000'
 )
 
 CORS_ALLOW_HEADERS = list(default_headers) + [
     'contenttype',
-    '*'
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -112,23 +95,18 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': env('PGDATABASE'),
-#         'USER': env('PGUSER'),
-#         'PASSWORD': env('PGPASSWORD'),
-#         #'HOST': env('PGHOST'),
-#         'PORT': env('PGPORT'),
-#         'ATOMIC_REQUESTS': False,
-#     }
-# }
-
-#APPEND_SLASH=False
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+
+        # 'ENGINE': 'django.db.backends.postgresql',
+        # 'NAME': env('PGDATABASE'),
+        # 'USER': env('PGUSER'),
+        # 'PASSWORD': env('PGPASSWORD'),
+        # #'HOST': env('PGHOST'),
+        # 'PORT': env('PGPORT'),
+        # 'ATOMIC_REQUESTS': False,
     }
 }
 
@@ -169,13 +147,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-STATIC_ROOT =os.path.join(BASE_DIR, 'staticfiles')
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 
 STATIC_URL = 'static/'
 STATICFILE_DIRS = [
     BASE_DIR / 'static',
 ]
-MEDIA_URL= '/media/'
+MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
@@ -183,19 +163,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-RESR_FRAMEWORK ={
-    'DEFAULT_PERMISSiON_CLASS':[
+RESR_FRAMEWORK = {
+    'DEFAULT_PERMISSiON_CLASS': [
         'rest_framework_permissions.allowAny'
     ]
 }
 
-AUTH_USER_MODEL = 'users.Client'
-
-REST_AUTH ={
-    'REGISTER_SERIALIZER': 'dj_rest_auth.registration.serializers.RegisterSerializer',
-}
-
-REST_FRAMEWORK = {
-    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
-}
-
+AUTH_USER_MODEL = 'customUser.CustomUser'

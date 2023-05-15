@@ -8,13 +8,11 @@ from django.core.exceptions import ObjectDoesNotExist
 
 
 from .serializers import MeetSerializer
-from ..professionals.serializer import ProfessionalsSerializer
-from ..services.serializer import ServiceSerializer
-from ..users.serializer import UserSerializer
+
 
 from ..professionals.models import Professionals
 from ..services.models import Service
-from ..users.models import Client
+from ..customUser.models import CustomUser
 from .models import Meet
 # Create your views here.
 
@@ -30,10 +28,10 @@ class MeetViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         (_, date, start_time,  status, professional_name,
          user_name, name_service) = request.data.values()
+        print('VERIFICANDO USUARIO ',request.user.first_name)
         try:
-            
             try:
-                service = Service.objects.get(name_service=name_service)
+                service = Service.objects.get(name_service__iexact=name_service)
             except ObjectDoesNotExist:
                 return Response('El servicio ' + name_service + 'no esta disponible')
             try:
@@ -44,7 +42,7 @@ class MeetViewSet(viewsets.ModelViewSet):
                 return Response(f'La profecional {professional_name} no esta disponible')
             try:
 
-                user = Client.objects.get(id=user_name)
+                user = CustomUser.objects.get(id=user_name)
             except ObjectDoesNotExist:
                 return Response(f'user no encontardo')
 
@@ -63,5 +61,5 @@ class MeetViewSet(viewsets.ModelViewSet):
 
             return Response("Nuestra profecional no esta disponible en este horario.")
         except KeyError:
-            print('algo salio mal')
+           
             return Response(f'algo salio mal {KeyError}', status= 400)

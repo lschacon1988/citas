@@ -12,39 +12,11 @@ class MeetSerializer(serializers.ModelSerializer):
         # para campos de solo lectura agregamos
         read_only_fields = ('id','end_time','cancelada')
         
-
-
-
-
-   
-
         
-        
-        
-        
-        
-    #     professionals_name = serializers.CharField(write_only=True)
-
-    # class Meta:
-    #     model = Book
-    #     fields = ('id', 'title', 'author', 'author_name')
-
-    # def create(self, validated_data):
-    #     author_name = validated_data.pop('author_name')
-    #     author = Author.objects.get(name=author_name)
-    #     book = Book.objects.create(author=author, **validated_data)
-    #     return book
-
-    # def update(self, instance, validated_data):
-    #     author_name = validated_data.pop('author_name', None)
-    #     if author_name:
-    #         author = Author.objects.get(name=author_name)
-    #         instance.author = author
-    #     instance.title = validated_data.get('title', instance.title)
-    #     instance.save()
-    #     return instance
-
-    # def to_representation(self, instance):
-    #     ret = super().to_representation(instance)
-    #     ret['author_name'] = instance.author.name if instance.author else None
-    #     return ret
+    def create(self, validated_data):
+        print('ESTOY EN CREATE SERIALIZERS',validated_data)
+        return ''
+    
+    def validate(self, attrs):
+        print('ESTOY EN LAIDATA SERIALIZERS',attrs)
+        return ''
