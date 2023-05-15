@@ -1,16 +1,27 @@
 import uuid
 from django.db import models
 from app.professionals.models import Professionals
-from app.users.models import User
+from app.users.models import Client
 
 from app.services.models import Service
+from utils.manager.ProfessionalsManager import ProfessionalManager
+# from utils.validation.future_date_validator import validate_date
+from datetime import timezone
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
 
 # Create your models here.
-
-
-class Meet(models.Model):
+        
+def future_date_validator( date):
+            
+    if date < timezone.now().date():
+        raise ValidationError(
+                    _('La fecha debe ser en el futuro.'),
+                    params={'date': date},)
+class Meet(models.Model):   
+    
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    date = models.DateField(null=True,)
+    date = models.DateField(null=True, validators=[future_date_validator])
     start_time = models.TimeField(null=True,)
     end_time = models.TimeField(null=True,)
     cancelada = models.BooleanField(default=True, blank=True)
@@ -19,8 +30,9 @@ class Meet(models.Model):
     professional_attendees = models.ForeignKey(
         Professionals, on_delete=models.CASCADE, name='professional_name', null=True)    
     user = models.ForeignKey(
-        User, on_delete=models.CASCADE, name='user_name', null=True)    
-    name_service = models.CharField(max_length=250, default='')
+        Client, on_delete=models.CASCADE, name='user_name', null=True)    
+    
+    objects = models.Manager()
+    professional_manager = ProfessionalManager()
 
-    def __str__(self):
-        return self.name_service
+    

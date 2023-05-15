@@ -34,11 +34,20 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
     #apps dependesis
     'core',
+    'coreapi',
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
+    'dj_rest_auth',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'dj_rest_auth.registration',
+    
     #apps project
     'app.meet',
     'app.professionals',
@@ -49,6 +58,12 @@ INSTALLED_APPS = [
     
     
 ]
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+SITE_ID = 1
+ACCOUNT_EMAIL_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'username'
+ACCOUNT_EMAIL_VERIFICATION = 'optional'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -64,11 +79,13 @@ MIDDLEWARE = [
 
 CORS_ORIGIN_WHITELIST=(
     'http://localhost:3000',
-    'http://127.0.0.1:3000'
+    'http://127.0.0.1:3000',
+    'http://127.0.0.1:8000'
 )
 
 CORS_ALLOW_HEADERS = list(default_headers) + [
     'contenttype',
+    '*'
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -170,5 +187,15 @@ RESR_FRAMEWORK ={
     'DEFAULT_PERMISSiON_CLASS':[
         'rest_framework_permissions.allowAny'
     ]
+}
+
+AUTH_USER_MODEL = 'users.Client'
+
+REST_AUTH ={
+    'REGISTER_SERIALIZER': 'dj_rest_auth.registration.serializers.RegisterSerializer',
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
 }
 

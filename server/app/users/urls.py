@@ -8,4 +8,6 @@ router.register('users', api.UserViewSet,  basename="users")
 
 
 # The API URLs are now determined automatically by the router.
-urlpatterns = router.urls
+urlpatterns = [
+    path('users/',include(router.urls))
+    ]

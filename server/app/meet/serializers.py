@@ -11,6 +11,10 @@ class MeetSerializer(serializers.ModelSerializer):
                   'professional_name', 'user_name', 'name_service')
         # para campos de solo lectura agregamos
         read_only_fields = ('id','end_time','cancelada')
+        
+
+
+
 
    
 
