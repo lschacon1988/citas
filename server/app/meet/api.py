@@ -1,21 +1,17 @@
-import datetime
 from rest_framework.response import Response
-from rest_framework.request import Request
 from rest_framework import viewsets, permissions
-from rest_framework.decorators import action
-from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
 
-
+from .models import Meet
 from .serializers import MeetSerializer
 
+from util.manager_DB.ServicesManagerDB import ServicesManagerDB
+from util.manager_DB.ProfessionalsManagerDB import ProfessionalsManagerDB
+from util.manager_DB.UserManagerDB import UserManagerDB
+from util.manager_DB.MeetMangerDB import MeetManagerDB
+from util.calculate_end_of_turn import calculate_end_of_turn
 
-from ..professionals.models import Professionals
-from ..services.models import Service
-from ..customUser.models import CustomUser
-from .models import Meet
 # Create your views here.
-
 
 format_hours = "%H:%M"
 
@@ -28,38 +24,46 @@ class MeetViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         (_, date, start_time,  status, professional_name,
          user_name, name_service) = request.data.values()
-        print('VERIFICANDO USUARIO ',request.user.first_name)
+
+        servisManager = ServicesManagerDB()
+        professionalManager = ProfessionalsManagerDB()
+        meetManager = MeetManagerDB()
+        userManager = UserManagerDB()
+
         try:
             try:
-                service = Service.objects.get(name_service__iexact=name_service)
-            except ObjectDoesNotExist:
-                return Response('El servicio ' + name_service + 'no esta disponible')
-            try:
+                service = servisManager.get_by_name(name_service=name_service)
 
-                professional = Professionals.objects.get(id=professional_name)
+                professional = professionalManager.get_by_id(
+                    object_id=professional_name)
 
-            except ObjectDoesNotExist:
-                return Response(f'La profecional {professional_name} no esta disponible')
-            try:
+                user = userManager.get_by_id(user_id=user_name)
 
-                user = CustomUser.objects.get(id=user_name)
-            except ObjectDoesNotExist:
-                return Response(f'user no encontardo')
+            except ObjectDoesNotExist as error:
+                return Response(f'{error}')
 
-            end_time = str(datetime.datetime.strptime(
-                start_time, format_hours) + service.duration - datetime.datetime(1900, 1, 1))
-            
-            space_not_available = Meet.objects.filter(Q(date=date) & Q(start_time__lte=start_time) &
-                                          Q(end_time__gte=start_time) & Q(professional_name=professional_name)).prefetch_related('professional_name')
-            
+            end_time = calculate_end_of_turn(self, start_time=start_time,
+                                            duration_turn=service.duration,
+                                            format_hours=format_hours)
 
-            if not space_not_available.exists():
-                new_meet = Meet(date=date, start_time=start_time, end_time=end_time,
-                                professional_name=professional, status=status, user_name=user, name_service=name_service)
-                new_meet.save()
+            professional_not_available = professionalManager.validate_availability(
+                professional_name=professional_name,
+                start_time=start_time,
+                date=date)
+
+            if not professional_not_available.exists():
+
+                new_meet = meetManager.create(date=date,
+                                            end_time=end_time,
+                                            start_time=start_time,
+                                            status=status,
+                                            professional=professional,
+                                            user=user,
+                                            name_service=service.name_service)
+
                 return Response(MeetSerializer(new_meet).data)
 
             return Response("Nuestra profecional no esta disponible en este horario.")
         except KeyError:
-           
-            return Response(f'algo salio mal {KeyError}', status= 400)
+
+            return Response(f'algo salio mal {KeyError}', status=400)
