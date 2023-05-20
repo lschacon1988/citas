@@ -15,9 +15,11 @@ class ProfessionalsManagerDB():
     
     def validate_availability(self, date, start_time, professional_name, ):
         
-        return Meet.objects.filter(Q(date=date) &
-                                   Q(start_time__lte=start_time) &
-                                   Q(end_time__gte=start_time) & 
-                                   Q(professional_name=professional_name)).prefetch_related('professional_name')
+        return Meet.objects.filter(
+                                Q(date=date) &
+                                Q(start_time__lte=start_time) &
+                                Q(end_time__gte=start_time) & 
+                                Q(professional_name=professional_name)
+                                ).prefetch_related('professional_name')
         
         
