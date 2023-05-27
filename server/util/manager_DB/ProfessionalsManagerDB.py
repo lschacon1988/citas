@@ -13,13 +13,13 @@ class ProfessionalsManagerDB():
         return self.manger.get_by_id(object_id = object_id)
     
     
-    def validate_availability(self, date, start_time, professional_name, ):
+    def validate_availability(self, date, start_time, professional, ):
         
         return Meet.objects.filter(
                                 Q(date=date) &
                                 Q(start_time__lte=start_time) &
                                 Q(end_time__gte=start_time) & 
-                                Q(professional_name=professional_name)
-                                ).prefetch_related('professional_name')
+                                Q(professional=professional)
+                                ).prefetch_related('professional')
         
         

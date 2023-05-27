@@ -4,6 +4,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from .models import Meet
 from .serializers import MeetSerializer
+from .adminSerializer import AdminSerializer
 
 from util.manager_DB.ServicesManagerDB import ServicesManagerDB
 from util.manager_DB.ProfessionalsManagerDB import ProfessionalsManagerDB
@@ -17,13 +18,29 @@ format_hours = "%H:%M"
 
 
 class MeetViewSet(viewsets.ModelViewSet):
-    queryset = Meet.objects.all()
-    permission_classes = [permissions.AllowAny]
-    serializer_class = MeetSerializer
+    queryset = Meet.objects.all()    
+    
+    
+    def get_permissions(self):
+        if self.action == 'create':
+            return [permissions.IsAuthenticated()]
+        elif self.action in ['update', 'partial_update']:
+            return [permissions.IsAdminUser()]
+        else:
+            return [permissions.AllowAny()]
+        
+    def get_serializer(self, *args, **kwargs):
+        if self.action == 'create':
+                return MeetSerializer(*args, **kwargs)
+        elif self.action in ['update', 'partial_update']:
+                return AdminSerializer(*args, **kwargs)
+        else:
+                return MeetSerializer(*args, **kwargs)
+    
 
     def create(self, request, *args, **kwargs):
-        (_, date, start_time,  status, professional_name,
-         user_name, name_service) = request.data.values()
+        (_, date, start_time,  professional,
+         user, name_service) = request.data.values()
 
         servisManager = ServicesManagerDB()
         professionalManager = ProfessionalsManagerDB()
@@ -35,9 +52,9 @@ class MeetViewSet(viewsets.ModelViewSet):
                 service = servisManager.get_by_name(name_service=name_service)
 
                 professional = professionalManager.get_by_id(
-                    object_id=professional_name)
+                    object_id=professional)
 
-                user = userManager.get_by_id(user_id=user_name)
+                user = userManager.get_by_id(user_id=user)
 
             except ObjectDoesNotExist as error:
                 return Response(f'{error}')
@@ -47,16 +64,15 @@ class MeetViewSet(viewsets.ModelViewSet):
                                             format_hours=format_hours)
 
             professional_not_available = professionalManager.validate_availability(
-                professional_name=professional_name,
+                professional=professional,
                 start_time=start_time,
                 date=date)
 
-            if not professional_not_available.exists():
+            if not professional_not_available.exists() :
 
                 new_meet = meetManager.create(date=date,
                                             end_time=end_time,
-                                            start_time=start_time,
-                                            status=status,
+                                            start_time=start_time,                                            
                                             professional=professional,
                                             user=user,
                                             name_service=service.name_service)
@@ -67,3 +83,12 @@ class MeetViewSet(viewsets.ModelViewSet):
         except KeyError:
 
             return Response(f'algo salio mal {KeyError}', status=400)
+
+    
+    def update(self, request, *args, **kwargs):
+        print(request.data)
+        return super().update(request, *args, **kwargs)
+    
+    def partial_update(self, request, *args, **kwargs):
+       
+        return super().partial_update(request, *args, **kwargs)

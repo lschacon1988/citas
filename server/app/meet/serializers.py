@@ -3,20 +3,20 @@ from .models import Meet
 from app.professionals.models import Professionals
 
 class MeetSerializer(serializers.ModelSerializer):
-    
+    professionals_name = serializers.ReadOnlyField(source='professional.name')
+    user_name = serializers.ReadOnlyField(source='user.first_name')
 
     class Meta:
         model = Meet
         fields = ('id', 'date', 'start_time', 'end_time', 'cancelada', 'status',
-                  'professional_name', 'user_name', 'name_service')
+                  'professional','professionals_name', 'user', 'user_name', 'name_service','status')
         # para campos de solo lectura agregamos
-        read_only_fields = ('id','end_time','cancelada')
+        read_only_fields = ('id','end_time','cancelada','status', 'professionals_name','user_name')
         
-        
-    def create(self, validated_data):
-        print('ESTOY EN CREATE SERIALIZERS',validated_data)
-        return ''
-    
-    def validate(self, attrs):
-        print('ESTOY EN LAIDATA SERIALIZERS',attrs)
-        return ''
+        extra_kwargs = {
+            'status': {'read_only': False},
+            'cancelada':{ 'read_only': False},
+            
+            
+            # Agrega otros campos que deseas permitir que el administrador modifique aquí
+        }
