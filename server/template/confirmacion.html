@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Confirmación de Cita</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #F2F2F2;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #FFFFFF;
+            padding: 30px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333333;
+            text-align: center;
+        }
+
+        p {
+            color: #666666;
+            line-height: 1.5;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: #FFFFFF;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Confirmación de Cita</h1>
+        <p>Estimado(a) {{user_name}},</p>
+        <p>La cita ha sido agendada correctamente.</p>
+        <p>A continuación, se muestran los detalles de la cita:</p>
+        <ul>
+            <li>Fecha: {{fecha}}</li>
+            <li>Hora de inicio: {{hora_inicio}}</li>
+            <li>Hora de finalización: {{hora_fin}}</li>
+            <li>Servicio: {{service_name}}</li>
+            <li>Profesional: {{profecional_name}}</li>
+        </ul>
+        <p>Si tienes alguna pregunta o necesitas realizar cambios en la cita, por favor contáctanos.</p>
+        <p>Gracias por confiar en nosotros.</p>
+        <p>Atentamente,</p>
+        <p>El equipo de [Nombre de la Empresa]</p>
+        <p>
+            <a class="button" href="[Enlace Adicional]">Enlace Adicional</a>
+        </p>
+    </div>
+</body>
+</html>

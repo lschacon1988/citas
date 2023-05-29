@@ -19,7 +19,8 @@ class ProfessionalsManagerDB():
                                 Q(date=date) &
                                 Q(start_time__lte=start_time) &
                                 Q(end_time__gte=start_time) & 
-                                Q(professional=professional)
+                                Q(professional=professional) &
+                                Q(status= 'scheduled')
                                 ).prefetch_related('professional')
         
         

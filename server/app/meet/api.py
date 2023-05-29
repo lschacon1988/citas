@@ -1,10 +1,15 @@
+from django.conf import settings
 from rest_framework.response import Response
 from rest_framework import viewsets, permissions
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+
 
 from .models import Meet
-from .serializers import MeetSerializer
-from .adminSerializer import AdminSerializer
+from .serializers import MeetSerializer, AdminSerializer
+
 
 from util.manager_DB.ServicesManagerDB import ServicesManagerDB
 from util.manager_DB.ProfessionalsManagerDB import ProfessionalsManagerDB
@@ -18,9 +23,8 @@ format_hours = "%H:%M"
 
 
 class MeetViewSet(viewsets.ModelViewSet):
-    queryset = Meet.objects.all()    
-    
-    
+    queryset = Meet.objects.all()
+
     def get_permissions(self):
         if self.action == 'create':
             return [permissions.IsAuthenticated()]
@@ -28,15 +32,12 @@ class MeetViewSet(viewsets.ModelViewSet):
             return [permissions.IsAdminUser()]
         else:
             return [permissions.AllowAny()]
-        
+
     def get_serializer(self, *args, **kwargs):
-        if self.action == 'create':
-                return MeetSerializer(*args, **kwargs)
-        elif self.action in ['update', 'partial_update']:
-                return AdminSerializer(*args, **kwargs)
+        if self.request.user.is_superuser:
+            return AdminSerializer(*args, **kwargs)
         else:
-                return MeetSerializer(*args, **kwargs)
-    
+            return MeetSerializer(*args, **kwargs)
 
     def create(self, request, *args, **kwargs):
         (_, date, start_time,  professional,
@@ -60,22 +61,40 @@ class MeetViewSet(viewsets.ModelViewSet):
                 return Response(f'{error}')
 
             end_time = calculate_end_of_turn(self, start_time=start_time,
-                                            duration_turn=service.duration,
-                                            format_hours=format_hours)
+                                             duration_turn=service.duration,
+                                             format_hours=format_hours)
 
             professional_not_available = professionalManager.validate_availability(
                 professional=professional,
                 start_time=start_time,
                 date=date)
 
-            if not professional_not_available.exists() :
+            if not professional_not_available.exists():
 
                 new_meet = meetManager.create(date=date,
-                                            end_time=end_time,
-                                            start_time=start_time,                                            
-                                            professional=professional,
-                                            user=user,
-                                            name_service=service.name_service)
+                                              end_time=end_time,
+                                              start_time=start_time,
+                                              professional=professional,
+                                              user=user,
+                                              name_service=service.name_service)
+
+                contex = {
+                    'fecha': date,
+                    'hora_inicio': start_time,
+                    'hora_fin': end_time,
+                    'profecional_name': professional.name,
+                    'user_name': user.first_name,
+                    'service_name': service.name_service,
+                }
+
+                asunto = 'Confirmación de cita'
+                mensaje_html = render_to_string(
+                    'confirmacion.html', context=contex)
+                mensaje_texto = strip_tags(mensaje_html)
+                destinatario = [user.email]
+
+                send_mail(asunto, mensaje_texto, settings.DEFAULT_FROM_EMAIL,
+                          destinatario, html_message=mensaje_html)
 
                 return Response(MeetSerializer(new_meet).data)
 
@@ -85,10 +104,3 @@ class MeetViewSet(viewsets.ModelViewSet):
             return Response(f'algo salio mal {KeyError}', status=400)
 
     
-    def update(self, request, *args, **kwargs):
-        print(request.data)
-        return super().update(request, *args, **kwargs)
-    
-    def partial_update(self, request, *args, **kwargs):
-       
-        return super().partial_update(request, *args, **kwargs)

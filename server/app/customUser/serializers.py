@@ -11,12 +11,7 @@ class CustomUSerSerializer(serializers.Serializer):
     first_name = serializers.CharField()
     last_name = serializers.CharField()
     tlf = serializers.CharField()
-    address = serializers.CharField()
-    
-    # class Meta:
-    #     model= CustomUser
-    #     fields = ('id','email','username','password','first_name','last_name','tlf','address')
-    #     read_only_fields =('id', )
+    address = serializers.CharField()   
         
         
     def create(self, validated_data, *args, **kwargs):
@@ -43,5 +38,11 @@ class CustomUSerSerializer(serializers.Serializer):
         representation = super().to_representation(instance)
         # Convertir el campo UUID a una cadena para que sea serializable por JSON
         representation['id'] = str(representation['id'])
-        return representation 
+        return representation
+
+class Admin_user_serializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = '__all__'
+    
         

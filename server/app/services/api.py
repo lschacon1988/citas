@@ -4,5 +4,5 @@ from .serializer import ServiceSerializer
 # Create your views here.
 class ServiceViewSet(viewsets.ModelViewSet):
     queryset = Service.objects.all()
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAdminUser]
     serializer_class = ServiceSerializer

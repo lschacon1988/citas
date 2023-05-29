@@ -11,7 +11,7 @@ env = environ.Env(
 )
 
 environ.Env.read_env()
-print(env('DEBUG'))
+
 DEBUG = env('DEBUG')
 SECRET_KEY = env('SECRET_KEY')
 
@@ -37,15 +37,12 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
+    'django_cron',
     # apps project
     'app.meet',
     'app.professionals',
     'app.customUser',
     'app.services',
-
-
-
-
 ]
 
 MIDDLEWARE = [
@@ -76,7 +73,7 @@ ROOT_URLCONF = 'core.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'template')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -110,10 +107,6 @@ DATABASES = {
     }
 }
 
-# import dj_database_url
-# DATABASES = {
-#     'default': dj_database_url.config(conn_max_age=600, ssl_require=True)
-# }
 
 
 # Password validation
@@ -170,3 +163,15 @@ RESR_FRAMEWORK = {
 }
 
 AUTH_USER_MODEL = 'customUser.CustomUser'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST ='smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+
+
+CRON_CLASSES = [
+    'app.meet.cron.VerificarMeetCronJob',
+]
