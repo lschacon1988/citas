@@ -10,8 +10,6 @@ from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
-...
-
 schema_view = get_schema_view(
    openapi.Info(
       title="Snippets API",
@@ -26,13 +24,11 @@ schema_view = get_schema_view(
 )
 
 base_api_v1 = [
+    path('', include('app.customUser.urls')),
     path('', include('app.professionals.urls')),
     path('', include('app.meet.urls')),
-    path('', include('app.customUser.urls')),
     path('', include('app.services.urls')),
-    
 ]
-
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -40,11 +36,10 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(next_page='/login/'), name='logout'),
     path('docs/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redocs/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
-    path('api/v1/', include(base_api_v1), name='api_v1'),
-    path('accounts/profile/', Profile.as_view(), name='profile')
-   
+    path('api/v1/', include(base_api_v1), name='api-root'),
+    path('accounts/profile/', Profile.as_view(), name='profile'),
 ]
 
 if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root= settings.MEDIA_ROOT)
-    urlpatterns += static(settings.STATIC_URL, document_root= settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

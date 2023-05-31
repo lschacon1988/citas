@@ -8,4 +8,7 @@ router.register('professionals', api.ProfessionalsViewSet,basename="professional
 
 
 # The API URLs are now determined automatically by the router.
-urlpatterns = router.urls
+urlpatterns =[ 
+              path('', include(router.urls),name='professionals'), 
+              
+              ]

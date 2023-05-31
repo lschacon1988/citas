@@ -3,7 +3,7 @@ from .models import Meet
 
 
 class MeetSerializer(serializers.ModelSerializer):
-    professionals_name = serializers.ReadOnlyField(source='professional.name')
+    professionals_name = serializers.ReadOnlyField(source='professional.user.first_name')
     user_name = serializers.ReadOnlyField(source='user.first_name')
 
     class Meta:
