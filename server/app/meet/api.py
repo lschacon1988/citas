@@ -1,3 +1,4 @@
+from drf_yasg.utils import swagger_auto_schema
 from django.conf import settings
 from rest_framework.response import Response
 from rest_framework import viewsets, permissions
@@ -17,9 +18,10 @@ from util.manager_DB.UserManagerDB import UserManagerDB
 from util.manager_DB.MeetMangerDB import MeetManagerDB
 from util.calculate_end_of_turn import calculate_end_of_turn
 
+
 # Create your views here.
 
-format_hours = "%H:%M"
+format_hours = "%H:%M:%S"
 
 
 class MeetViewSet(viewsets.ModelViewSet):
@@ -35,13 +37,32 @@ class MeetViewSet(viewsets.ModelViewSet):
 
     def get_serializer(self, *args, **kwargs):
         if self.request.user.is_superuser:
-            return AdminSerializer(*args, **kwargs)
+            return MeetSerializer(*args, **kwargs)
         else:
             return MeetSerializer(*args, **kwargs)
 
+    @swagger_auto_schema(
+        tags=['Meet'], operation_summary='Lista todos los meet'
+
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+    @swagger_auto_schema(
+        tags=['Meet'], operation_summary='lee los meet'
+    )
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
+
+    @swagger_auto_schema(
+        tags=['Meet'], operation_summary='Crea un meet'
+
+    )
     def create(self, request, *args, **kwargs):
-        (_, date, start_time,  professional,
-         user, name_service) = request.data.values()
+        print('/*/*//', request.data)
+        # (_, date, start_time,  professional,
+        #  user, name_service) = request.data.values()
+        data = request.data
 
         servisManager = ServicesManagerDB()
         professionalManager = ProfessionalsManagerDB()
@@ -50,39 +71,40 @@ class MeetViewSet(viewsets.ModelViewSet):
 
         try:
             try:
-                service = servisManager.get_by_name(name_service=name_service)
+                service = servisManager.get_by_name(
+                    name_service=data['name_service'])
 
                 professional = professionalManager.get_by_id(
-                    object_id=professional)
+                    object_id=data['professional'])
 
-                user = userManager.get_by_id(user_id=user)
+                user = userManager.get_by_id(user_id=data['user'])
 
             except ObjectDoesNotExist as error:
                 return Response(f'{error}')
 
-            end_time = calculate_end_of_turn(self, start_time=start_time,
+            end_time = calculate_end_of_turn(self, start_time=data['start_time'],
                                              duration_turn=service.duration,
                                              format_hours=format_hours)
 
             professional_not_available = professionalManager.validate_availability(
                 professional=professional,
-                start_time=start_time,
-                date=date)
+                start_time=data['start_time'],
+                date=data['date'])
 
             if not professional_not_available.exists():
 
-                new_meet = meetManager.create(date=date,
+                new_meet = meetManager.create(date=data['date'],
                                               end_time=end_time,
-                                              start_time=start_time,
+                                              start_time=data['start_time'],
                                               professional=professional,
                                               user=user,
                                               name_service=service.name_service)
 
                 contex = {
-                    'fecha': date,
-                    'hora_inicio': start_time,
+                    'fecha': data['date'],
+                    'hora_inicio': data['start_time'],
                     'hora_fin': end_time,
-                    'profecional_name': professional.name,
+                    'profecional_name': professional.user.first_name,
                     'user_name': user.first_name,
                     'service_name': service.name_service,
                 }
@@ -96,11 +118,27 @@ class MeetViewSet(viewsets.ModelViewSet):
                 send_mail(asunto, mensaje_texto, settings.DEFAULT_FROM_EMAIL,
                           destinatario, html_message=mensaje_html)
 
-                return Response(MeetSerializer(new_meet).data)
+                return Response(MeetSerializer(new_meet).data, status=201)
 
             return Response("Nuestra profecional no esta disponible en este horario.")
         except KeyError:
 
             return Response(f'algo salio mal {KeyError}', status=400)
 
-    
+    @swagger_auto_schema(
+        tags=['Meet'], operation_summary='Actualiza un meet'
+    )
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs)
+
+    @swagger_auto_schema(
+        tags=['Meet'], operation_summary='Actualiza un meet'
+    )
+    def partial_update(self, request, *args, **kwargs):
+        return super().partial_update(request, *args, **kwargs)
+
+    @swagger_auto_schema(
+        tags=['Meet'], operation_summary='Elimina un meet'
+    )
+    def destroy(self, request, *args, **kwargs):
+        return super().destroy(request, *args, **kwargs)
