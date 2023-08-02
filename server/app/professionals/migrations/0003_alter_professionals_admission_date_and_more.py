@@ -16,9 +16,9 @@ class Migration(migrations.Migration):
             name='admission_date',
             field=models.DateField(default=django.utils.timezone.now),
         ),
-        migrations.AlterField(
-            model_name='professionals',
-            name='id',
-            field=models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID'),
-        ),
+        # migrations.AlterField(
+        #     model_name='professionals',
+        #     name='id',
+        #     field=models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID'),
+        # ),
     ]
