@@ -142,3 +142,9 @@ class MeetViewSet(viewsets.ModelViewSet):
     )
     def destroy(self, request, *args, **kwargs):
         return super().destroy(request, *args, **kwargs)
+
+    @swagger_auto_schema(
+        tags=['Meet'], operation_summary='Prueba'
+    )
+    def get(self, request, *args, **kwargs):
+        return Response('hola mundo')
