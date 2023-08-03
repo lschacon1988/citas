@@ -9,10 +9,10 @@ class Migration(migrations.Migration):
         ('professionals', '0008_remove_professionals_lastname_and_more'),
     ]
 
-    operations = [
-        migrations.AlterField(
-            model_name='professionals',
-            name='id',
-            field=models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID'),
-        ),
-    ]
+    # operations = [
+    #     migrations.AlterField(
+    #         model_name='professionals',
+    #         name='id',
+    #         field=models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID'),
+    #     ),
+    # ]
