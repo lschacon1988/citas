@@ -1,7 +1,7 @@
 
 
 from pathlib import Path
-from corsheaders.defaults import default_headers
+from corsheaders.defaults import default_headers, default_methods
 import os
 import environ
 print(os.environ.get('PORT'))
@@ -61,16 +61,25 @@ MIDDLEWARE = [
 ]
 
 CORS_ORIGIN_WHITELIST = (
-    'http://localhost:3000',
-    'http://127.0.0.1:3000',
-    'http://localhost:5173',
-    'http://127.0.0.1:5173'
+    "*"
 )
+
+CORS_ALLOW_ALL_ORIGINS = False
+
+CORS_ALLOWED_ORIGINS = [
+    "https://django-server-production-141f.up.railway.app/",
+    # Agrega otros dominios permitidos si es necesario
+]
+
+CORS_ALLOW_METHODS = list(default_methods) + [
+    '*'
+]
 
 CORS_ALLOW_HEADERS = list(default_headers) + [
     'contenttype',
 ]
 
+CORS_ALLOW_CREDENTIALS = True
 ROOT_URLCONF = 'core.urls'
 
 TEMPLATES = [
