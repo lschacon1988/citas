@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Professionals',
             fields=[
-                # ('id', models.UUIDField(primary_key=True, serialize=False, unique=True)),
+                ('id', models.UUIDField(primary_key=True, serialize=False, unique=True)),
                 ('name', models.CharField(max_length=200)),
                 ('lastname', models.CharField(max_length=200)),
                 ('specialty', models.CharField(max_length=150)),
