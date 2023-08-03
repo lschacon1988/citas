@@ -14,6 +14,7 @@ env = environ.Env(
 
 environ.Env.read_env()
 
+LOCAL_DEV = env('LOCAL_DEV')
 DEBUG = env('DEBUG')
 SECRET_KEY = env('SECRET_KEY')
 
@@ -93,7 +94,7 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-if DEBUG:
+if (DEBUG and LOCAL_DEV):
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
