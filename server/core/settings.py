@@ -68,6 +68,7 @@ CORS_ALLOW_ALL_ORIGINS = False
 
 CORS_ALLOWED_ORIGINS = [
     "https://django-server-production-141f.up.railway.app",
+    "http://django-server-production-141f.up.railway.app",
     # Agrega otros dominios permitidos si es necesario
 ]
 
