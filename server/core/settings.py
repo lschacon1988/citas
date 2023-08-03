@@ -67,7 +67,8 @@ CORS_ORIGIN_WHITELIST = (
 CORS_ALLOW_ALL_ORIGINS = False
 
 CORS_ALLOWED_ORIGINS = [
-    '*'
+    'http://*'
+    'https://*'
     # Agrega otros dominios permitidos si es necesario
 ]
 
