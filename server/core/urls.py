@@ -22,7 +22,7 @@ schema_view = get_schema_view(
     public=True,
     permission_classes=[permissions.AllowAny],
     
-    url="https://django-server-production-141f.up.railway.app",
+    url="https://server-production-citas.up.railway.app",
 
 )
 
