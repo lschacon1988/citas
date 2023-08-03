@@ -5,7 +5,7 @@ from corsheaders.defaults import default_headers, default_methods
 import os
 import environ
 print(os.environ.get('PORT'))
-PORT= int(os.environ.get('PORT', 5000))
+PORT = int(os.environ.get('PORT', 5000))
 
 
 env = environ.Env(
@@ -67,13 +67,12 @@ CORS_ORIGIN_WHITELIST = (
 CORS_ALLOW_ALL_ORIGINS = False
 
 CORS_ALLOWED_ORIGINS = [
-    "https://django-server-production-141f.up.railway.app/",
+    "https://django-server-production-141f.up.railway.app",
     # Agrega otros dominios permitidos si es necesario
 ]
 
-CORS_ALLOW_METHODS = list(default_methods) + [
-    '*'
-]
+CORS_ALLOW_METHODS = list(default_methods) + ['*'
+                                              ]
 
 CORS_ALLOW_HEADERS = list(default_headers) + [
     'contenttype',
@@ -125,14 +124,11 @@ else:
             'NAME': env('PGDATABASE'),
             'USER': env('PGUSER'),
             'PASSWORD': env('PGPASSWORD'),
-            #'HOST': env('PGHOST'),
+            # 'HOST': env('PGHOST'),
             'PORT': env('PGPORT'),
             'ATOMIC_REQUESTS': False,
         }
     }
-    
-
-
 
 
 # Password validation
@@ -163,8 +159,6 @@ USE_I18N = True
 USE_TZ = True
 
 
-
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
@@ -173,13 +167,13 @@ STATIC_URL = '/static/'
 
 STATIC_DIRS = [
     os.path.join(BASE_DIR, 'static'),
-    
+
 ]
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_DIRS = [
-    
+
     os.path.join(BASE_DIR, 'staticfiles'),
 ]
 
@@ -201,7 +195,7 @@ RESR_FRAMEWORK = {
 AUTH_USER_MODEL = 'customUser.CustomUser'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST ='smtp.gmail.com'
+EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = env('EMAIL_HOST_USER')
@@ -211,4 +205,3 @@ EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 CRON_CLASSES = [
     'app.meet.cron.VerificarMeetCronJob',
 ]
-
