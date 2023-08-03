@@ -7,7 +7,7 @@ from app.customUser.models import CustomUser
 
 
 class Professionals(models.Model):
-    id = models.BigIntegerField( primary_key=True, editable=False)
+    id = models.UUIDField( primary_key=True,default=uuid.uuid4, editable=False)
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='professionals', null=True, blank=True)
     specialty = models.CharField(max_length=150)    
     admission_date = models.DateField(null=True, auto_now=True)
