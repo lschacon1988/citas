@@ -4,6 +4,8 @@ from pathlib import Path
 from corsheaders.defaults import default_headers
 import os
 import environ
+print(os.environ.get('PORT'))
+PORT= int(os.environ.get('PORT', 5000))
 
 
 env = environ.Env(
@@ -189,3 +191,4 @@ EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 CRON_CLASSES = [
     'app.meet.cron.VerificarMeetCronJob',
 ]
+
