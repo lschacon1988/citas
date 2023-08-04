@@ -17,6 +17,10 @@ base_api_v1 = [
     path('', include('app.services.urls')),
 ]
 
+base_view=[
+    path('admin/', Profile.as_view(), name='admin'),
+]
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('rest_framework.urls')),
@@ -26,7 +30,7 @@ urlpatterns = [
     path('redocs/', schema_view.with_ui('redoc',
          cache_timeout=0), name='schema-redoc'),
     path('api/v1/', include(base_api_v1)),
-    path('accounts/profile/', Profile.as_view(), name='profile'),
+    path('api/v1/', include(base_view)),
 ]
 
 

@@ -34,11 +34,31 @@ class CustomUSerSerializer(serializers.Serializer):
             raise serializers.ValidationError("El nombre de usuario ya existe")
         return value
     
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        # Convertir el campo UUID a una cadena para que sea serializable por JSON
-        representation['id'] = str(representation['id'])
-        return representation
+    
+    
+    
+
+class Superuser_serializer(serializers.Serializer):
+    id = serializers.UUIDField(read_only=True)
+    email = serializers.EmailField()
+    username = serializers.CharField()
+    password = serializers.CharField(write_only=True)
+    is_superuser = serializers.BooleanField(read_only=True,default=True)
+    is_staff = serializers.BooleanField(read_only=True,default=True)
+    
+    def create(self, validated_data):
+        instance = get_user_model()
+        
+        new_user = instance.objects.create_user(
+            username=validated_data['username'],
+            email=validated_data['email'],
+            password=validated_data['password'],
+            is_superuser=True,
+            is_staff=True
+            
+            
+        )
+        return new_user
 
 class Admin_user_serializer(serializers.ModelSerializer):
     class Meta:

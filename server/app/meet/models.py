@@ -12,30 +12,32 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
 # Create your models here.
-        
-def future_date_validator( date):
-            
+
+
+def future_date_validator(date):
+
     if date < timezone.now().date():
         raise ValidationError(
-                    _('La fecha debe ser en el futuro.'),
-                    params={'date': date},)
-        
-class Meet(models.Model):  
-    status_choices = {('scheduled', 'Scheduled'), 
-                      ('canceled', 'Canceled'),
-                      ('completed', 'Completed')} 
-    
+            _('La fecha debe ser en el futuro.'),
+            params={'date': date},)
+
+
+status_choices = {('scheduled', 'Scheduled'),
+                  ('canceled', 'Canceled'),
+                  ('completed', 'Completed')}
+
+
+class Meet(models.Model):
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     date = models.DateField(null=True, validators=[future_date_validator])
     start_time = models.TimeField(null=True,)
-    end_time = models.TimeField(null=True,)    
-    status = models.CharField(max_length=50, choices=status_choices, default='scheduled')    
+    end_time = models.TimeField(null=True,)
+    status = models.CharField(
+        max_length=50, choices=status_choices, default='scheduled')
     professional_attendees = models.ForeignKey(
-        Professionals, on_delete=models.CASCADE, name='professional', null=True)    
+        Professionals, on_delete=models.CASCADE, name='professional', null=True)
     user = models.ForeignKey(
-        CustomUser, on_delete=models.CASCADE, name='user', null=True)    
-    name_service = models.CharField(max_length=50, default= 'Tradicional')
+        CustomUser, on_delete=models.CASCADE, name='user', null=True)
+    name_service = models.CharField(max_length=50, default='Tradicional')
     objects = models.Manager()
-    
-
-    
