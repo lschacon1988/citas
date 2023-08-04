@@ -5,26 +5,10 @@ from django.urls import include
 from rest_framework.urls import path, views as auth_views
 from django.conf import settings
 from django.conf.urls.static import static
-from rest_framework import permissions
-from drf_yasg.views import get_schema_view
-from drf_yasg import openapi
+from .swagger_config import schema_view_local, schema_view_productions
 
-schema_view = get_schema_view(
-    openapi.Info(
-        title="Snippets API",
-        default_version='v1',
-        description="Test description",
-        terms_of_service="https://www.google.com/policies/terms/",
-        contact=openapi.Contact(email="contact@snippets.local"),
-        license=openapi.License(name="BSD License"),
+schema_view = schema_view_local if settings.LOCAL_DEV else schema_view_productions
 
-    ),
-    public=True,
-    permission_classes=[permissions.AllowAny],
-    
-    url="https://server-production-citas.up.railway.app",
-
-)
 
 base_api_v1 = [
     path('', include('app.customUser.urls')),

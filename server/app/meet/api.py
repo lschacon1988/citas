@@ -80,7 +80,7 @@ class MeetViewSet(viewsets.ModelViewSet):
                 user = userManager.get_by_id(user_id=data['user'])
 
             except ObjectDoesNotExist as error:
-                return Response(f'{error}')
+                return Response(f'{error}', status=400)
 
             end_time = calculate_end_of_turn(self, start_time=data['start_time'],
                                              duration_turn=service.duration,
@@ -120,10 +120,10 @@ class MeetViewSet(viewsets.ModelViewSet):
 
                 return Response(MeetSerializer(new_meet).data, status=201)
 
-            return Response("Nuestra profecional no esta disponible en este horario.")
-        except KeyError:
+            return Response("Nuestra profecional no esta disponible en este horario.", status=400)
+        except KeyError as error:
 
-            return Response(f'algo salio mal {KeyError}', status=400)
+            return Response(f'algo salio mal {error}', status=500)
 
     @swagger_auto_schema(
         tags=['Meet'], operation_summary='Actualiza un meet'
@@ -142,9 +142,3 @@ class MeetViewSet(viewsets.ModelViewSet):
     )
     def destroy(self, request, *args, **kwargs):
         return super().destroy(request, *args, **kwargs)
-
-    @swagger_auto_schema(
-        tags=['Meet'], operation_summary='Prueba'
-    )
-    def get(self, request, *args, **kwargs):
-        return Response('hola mundo')

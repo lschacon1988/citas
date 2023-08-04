@@ -4,11 +4,16 @@ from rest_framework.views import APIView
 from rest_framework.authentication import SessionAuthentication
 from django.contrib.auth import logout
 from .serializers import CustomUSerSerializer
+from drf_yasg.utils import swagger_auto_schema
+
 
 
 class Profile(APIView):
     authentication_classes = [SessionAuthentication]
 
+    @swagger_auto_schema(
+        tags=['Prueba'], operation_summary='Prueba 2'
+    )
     def get(self, request, *args, **kwargs):
         # Si el usuario no está autenticado, redirigir a la página de inicio de sesión
         
@@ -21,6 +26,13 @@ class Profile(APIView):
         # Devolver el usuario serializado
         return Response({"user": user.data}, status=status.HTTP_200_OK)
 
+    
+    @swagger_auto_schema(
+        tags=['Prueba'], operation_summary='Prueba'
+    )
+    def post(self, request, *args, **kwargs):
+        # Si el usuario no está autenticado, redirigir a la página de inicio de sesión
+        return
 
 class LogoutView(APIView):
     def post(self, request):
