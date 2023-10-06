@@ -77,7 +77,7 @@ class MeetViewSet(viewsets.ModelViewSet):
                 professional = professionalManager.get_by_id(
                     object_id=data['professional'])
 
-                user = userManager.get_by_id(user_id=data['user'])
+                user = userManager. get_by_id(user_id=data['user'])
 
             except ObjectDoesNotExist as error:
                 return Response(f'{error}', status=400)
