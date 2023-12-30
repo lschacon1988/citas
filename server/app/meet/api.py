@@ -11,7 +11,6 @@ from django.utils.html import strip_tags
 from .models import Meet
 from .serializers import MeetSerializer, AdminSerializer
 
-
 from util.manager_DB.ServicesManagerDB import ServicesManagerDB
 from util.manager_DB.ProfessionalsManagerDB import ProfessionalsManagerDB
 from util.manager_DB.UserManagerDB import UserManagerDB
